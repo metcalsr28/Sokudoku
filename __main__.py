@@ -8,7 +8,7 @@ class TextPlayer(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Sokudoku Reader")
-        self.setWindowIcon(QPixmap("res/images/Icon.png"))
+        self.setWindowIcon(QPixmap("res/images/Icon2.png"))
 
         # Initialize variables
         self.file = None
@@ -42,11 +42,14 @@ class TextPlayer(QWidget):
         self.stop_button.clicked.connect(self.stop)
         self.word_index_label = QLabel("Word Index:")
         self.word_index_edit = QLineEdit()
-        self.word_index_edit.returnPressed.connect(self.seek)
+        self.word_index_edit.editingFinished.connect(self.seek)
         self.text_label = QLabel()
         self.text_label.setWordWrap(True)
         self.text_label.setAlignment(Qt.AlignCenter)
 
+        # Post-instantiation settings
+        self.samples_per_minute_slider.setValue(250)
+        
         # Create layouts
         file_select_layout = QHBoxLayout()
         file_select_layout.addWidget(self.file_select_button)
@@ -85,10 +88,12 @@ class TextPlayer(QWidget):
         interval = 60000 / (self.samples_per_minute_slider.value() * self.words_per_sample_slider.value())
         self.timer.start(interval)
         self.paused = False
+        self.word_index_edit.setEnabled(False)
 
     def pause(self):
         self.timer.stop()
         self.paused = True
+        self.word_index_edit.setEnabled(True)
 
     def stop(self):
         self.timer.stop()
@@ -105,6 +110,7 @@ class TextPlayer(QWidget):
         self.word_index += words_per_sample
         #print(" ".join(self.words))  # for demonstration purposes, replace with actual display method
         self.word_index_edit.setText(str(self.word_index))
+        print(words_per_sample * self.samples_per_minute_slider.value())
 
     def seek(self):
         word_index = int(self.word_index_edit.text())
@@ -134,6 +140,7 @@ class TextPlayer(QWidget):
 
     def resizeEvent(self, event):
         self.adjust_font()
+
 
     # def show(self):
     #     super().show()
