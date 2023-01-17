@@ -129,7 +129,7 @@ class TextPlayer(QWidget):
     def update_interval(self):
         samples_per_minute = self.samples_per_minute_slider.value()
         self.samples_per_minute_label.setText("Samples per Minute: (1-1000):   " + str(samples_per_minute))
-        interval = 60000 / (samples_per_minute * self.words_per_sample_slider.value())
+        interval = 60000 / samples_per_minute
         self.timer.setInterval(interval)
 
     def resizeEvent(self, event):
